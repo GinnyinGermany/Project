@@ -2,3 +2,4 @@
 *.pdf
 data/
 Copernicus_LaTeX_Package/
+.DS_Store
