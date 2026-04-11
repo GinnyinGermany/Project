@@ -9,7 +9,7 @@ import os
 # [CONTROL PANEL] - Adjust research parameters here
 # =====================================================================
 CONFIG = {
-    'tau_max': 7,            # Maximum dynamic delay (days)
+    'tau_max': 5,            # Maximum dynamic delay (days)
     'num_surrogates': 100,  # Number of Null Model shuffles (Standard: 1000)
     'percentile': 95,        # Significance level (95th or 99th percentile)
     'n_jobs' : -1            # Use all available CPU cores
@@ -77,10 +77,12 @@ def worker_function(s_pair, time_steps, n_surr, p_level, t_max):
     fake_scores_12 = np.zeros(n_surr)
     fake_scores_21 = np.zeros(n_surr)
     
+    rng = np.random.default_rng()
+    
     for k in range(n_surr):
         # Randomly shuffle events within the valid time frame
-        fake_t1 = np.sort(np.random.choice(time_steps, s1, replace=False))
-        fake_t2 = np.sort(np.random.choice(time_steps, s2, replace=False))
+        fake_t1 = np.sort(rng.choice(time_steps, size=s1, replace=False))
+        fake_t2 = np.sort(rng.choice(time_steps, size=s2, replace=False))
         
         c_12, c_21 = calculate_event_synchronization_exact(fake_t1, fake_t2, tau_max=t_max)
         fake_scores_12[k] = c_12
